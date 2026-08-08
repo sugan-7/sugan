@@ -26,95 +26,146 @@ import { ProgressBar } from "@/components/ui/ProgressBar";
 import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import { Drawer } from "@/components/ui/Drawer";
 
+interface ExerciseItem {
+  id: string;
+  name: string;
+  category: "PLYOMETRIC" | "STRENGTH" | "ISOMETRIC" | "HYPERTROPHY";
+  sets: number;
+  reps: string;
+  load: string;
+  cue: string;
+  mistake: string;
+  equipment: string;
+  completedSets: boolean[];
+}
+
+const INITIAL_EXERCISES: ExerciseItem[] = [
+  {
+    id: "ex-1",
+    name: "Low-Amplitude Pogo Hops",
+    category: "PLYOMETRIC",
+    sets: 3,
+    reps: "15 hops",
+    load: "Bodyweight",
+    cue: "Keep ankles stiff like springs. Minimum heel contact with the floor.",
+    mistake: "Letting heels drop and absorb elastic force.",
+    equipment: "None",
+    completedSets: [false, false, false],
+  },
+  {
+    id: "ex-2",
+    name: "Depth Drops to Stick Landing",
+    category: "PLYOMETRIC",
+    sets: 4,
+    reps: "4 reps",
+    load: "20-inch Box",
+    cue: "Step off the box, do not jump. Land silently in athletic universal position.",
+    mistake: "Stiff-legged landing or valgus knee collapse.",
+    equipment: "Plyo Box",
+    completedSets: [false, false, false, false],
+  },
+  {
+    id: "ex-3",
+    name: "Trap Bar Deadlift (Speed Focus)",
+    category: "STRENGTH",
+    sets: 4,
+    reps: "5 reps",
+    load: "70% 1RM (Accelerative)",
+    cue: "Drive feet through the court floor. Explosive hip extension.",
+    mistake: "Rounding upper back or slow lockout.",
+    equipment: "Trap Bar, Plates",
+    completedSets: [false, false, false, false],
+  },
+  {
+    id: "ex-4",
+    name: "Isometric Split Squat Hold",
+    category: "ISOMETRIC",
+    sets: 3,
+    reps: "30 sec / leg",
+    load: "Bodyweight / Dumbbells",
+    cue: "Front shin vertical. 90-degree knee flexion. Maximum patellar tendon loading.",
+    mistake: "Leaning torso excessively forward.",
+    equipment: "Dumbbells",
+    completedSets: [false, false, false],
+  },
+  {
+    id: "ex-5",
+    name: "Seated Soleus Calf Raise",
+    category: "HYPERTROPHY",
+    sets: 3,
+    reps: "12 reps",
+    load: "Moderate / Controlled",
+    cue: "Full stretch at the bottom. 2-second pause to isolate soleus tendon stiffness.",
+    mistake: "Bouncing weights at top.",
+    equipment: "Seated Bench, Dumbbells",
+    completedSets: [false, false, false],
+  },
+];
+
 export default function WorkoutPage() {
+  const [exercises, setExercises] = useState<ExerciseItem[]>(INITIAL_EXERCISES);
   const [isWorkoutStarted, setIsWorkoutStarted] = useState(false);
   const [isWorkoutCompleted, setIsWorkoutCompleted] = useState(false);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [isSkipDialogOpen, setIsSkipDialogOpen] = useState(false);
   const [isCueDrawerOpen, setIsCueDrawerOpen] = useState(false);
+  const [timerKey, setTimerKey] = useState(0);
+  const [autoStartTimer, setAutoStartTimer] = useState(false);
 
   // RPE & Recovery state
   const [sessionRpe, setSessionRpe] = useState<number>(7);
   const [sorenessScore, setSorenessScore] = useState<number>(3);
-  const [sessionNotes, setSessionNotes] = useState("");
-
-  const exercises = [
-    {
-      id: "ex-1",
-      name: "Low-Amplitude Pogo Hops",
-      category: "PLYOMETRIC",
-      sets: 3,
-      reps: "15 hops",
-      load: "Bodyweight",
-      cue: "Keep ankles stiff like springs. Minimum heel contact with the floor.",
-      mistake: "Letting heels drop and absorb elastic force.",
-      equipment: "None",
-      completedSets: [true, true, false],
-    },
-    {
-      id: "ex-2",
-      name: "Depth Drops to Stick Landing",
-      category: "PLYOMETRIC",
-      sets: 4,
-      reps: "4 reps",
-      load: "20-inch Box",
-      cue: "Step off the box, do not jump. Land silently in athletic universal position.",
-      mistake: "Stiff-legged landing or valgus knee collapse.",
-      equipment: "Plyo Box",
-      completedSets: [false, false, false, false],
-    },
-    {
-      id: "ex-3",
-      name: "Trap Bar Deadlift (Speed Focus)",
-      category: "STRENGTH",
-      sets: 4,
-      reps: "5 reps",
-      load: "70% 1RM (Accelerative)",
-      cue: "Drive feet through the court floor. Explosive hip extension.",
-      mistake: "Rounding upper back or slow lockout.",
-      equipment: "Trap Bar, Plates",
-      completedSets: [false, false, false, false],
-    },
-    {
-      id: "ex-4",
-      name: "Isometric Split Squat Hold",
-      category: "ISOMETRIC",
-      sets: 3,
-      reps: "30 sec / leg",
-      load: "Bodyweight / Dumbbells",
-      cue: "Front shin vertical. 90-degree knee flexion. Maximum patellar tendon loading.",
-      mistake: "Leaning torso excessively forward.",
-      equipment: "Dumbbells",
-      completedSets: [false, false, false],
-    },
-    {
-      id: "ex-5",
-      name: "Seated Soleus Calf Raise",
-      category: "HYPERTROPHY",
-      sets: 3,
-      reps: "12 reps",
-      load: "Moderate / Controlled",
-      cue: "Full stretch at the bottom. 2-second pause to isolate soleus tendon stiffness.",
-      mistake: "Bouncing weights at top.",
-      equipment: "Seated Bench, Dumbbells",
-      completedSets: [false, false, false],
-    },
-  ];
 
   const totalSets = exercises.reduce((acc, ex) => acc + ex.sets, 0);
   const completedSetsCount = exercises.reduce(
     (acc, ex) => acc + ex.completedSets.filter(Boolean).length,
     0
   );
-  const progressPercent = Math.round((completedSetsCount / totalSets) * 100);
+  const progressPercent = totalSets > 0 ? Math.round((completedSetsCount / totalSets) * 100) : 0;
 
-  const activeExercise = exercises[currentExerciseIndex];
+  const activeExercise = exercises[currentExerciseIndex] || exercises[0];
 
   const handleToggleSet = (exIndex: number, setIndex: number) => {
-    exercises[exIndex].completedSets[setIndex] = !exercises[exIndex].completedSets[setIndex];
-    if (completedSetsCount + 1 >= totalSets) {
-      setIsWorkoutCompleted(true);
-    }
+    setIsWorkoutStarted(true);
+
+    setExercises((prevExercises) => {
+      const updated = prevExercises.map((ex, i) => {
+        if (i !== exIndex) return ex;
+        const newSets = [...ex.completedSets];
+        newSets[setIndex] = !newSets[setIndex];
+        return { ...ex, completedSets: newSets };
+      });
+
+      const wasDone = prevExercises[exIndex].completedSets[setIndex];
+      const isNowDone = !wasDone;
+
+      // If user checked a set as done, trigger rest timer
+      if (isNowDone) {
+        setAutoStartTimer(true);
+        setTimerKey((k) => k + 1);
+
+        if (typeof window !== "undefined" && "vibrate" in navigator) {
+          navigator.vibrate(60);
+        }
+
+        // If all sets in this exercise are complete, advance to next exercise
+        const thisExComplete = updated[exIndex].completedSets.every(Boolean);
+        if (thisExComplete && exIndex < prevExercises.length - 1) {
+          setCurrentExerciseIndex(exIndex + 1);
+        }
+      }
+
+      // Check if total workout is 100% complete
+      const totalDone = updated.reduce(
+        (acc, ex) => acc + ex.completedSets.filter(Boolean).length,
+        0
+      );
+      if (totalDone >= totalSets) {
+        setIsWorkoutCompleted(true);
+      }
+
+      return updated;
+    });
   };
 
   const handleFinishWorkout = () => {
@@ -169,7 +220,7 @@ export default function WorkoutPage() {
             value={progressPercent}
             color="orange"
             size="md"
-            label={`Session Progress: ${completedSetsCount} / ${totalSets} Sets`}
+            label={`Session Progress: ${completedSetsCount} / ${totalSets} Sets (${progressPercent}%)`}
             showPercentage
           />
         </div>
@@ -243,6 +294,9 @@ export default function WorkoutPage() {
             <div className="lg:col-span-2 space-y-4">
               {exercises.map((ex, exIdx) => {
                 const isSelected = exIdx === currentExerciseIndex;
+                const exSetsDone = ex.completedSets.filter(Boolean).length;
+                const isExAllDone = exSetsDone === ex.sets;
+
                 return (
                   <div
                     key={ex.id}
@@ -250,13 +304,15 @@ export default function WorkoutPage() {
                     className={`rounded-2xl p-5 glass-panel border transition-all duration-200 cursor-pointer ${
                       isSelected
                         ? "border-court-orange bg-court-charcoal/90 shadow-glow-orange ring-1 ring-court-orange/40"
+                        : isExAllDone
+                        ? "border-emerald-500/40 bg-court-charcoal/40 opacity-90"
                         : "border-court-border bg-court-charcoal/50 hover:border-court-border/80"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div>
                         <div className="flex items-center gap-2 mb-1">
-                          <Badge variant="orange" size="sm">
+                          <Badge variant={isExAllDone ? "emerald" : "orange"} size="sm">
                             {ex.category}
                           </Badge>
                           <span className="text-xs font-mono text-muted-foreground">
@@ -268,8 +324,12 @@ export default function WorkoutPage() {
                         </h3>
                       </div>
 
-                      <span className="text-xs font-metric font-bold text-court-gold bg-court-card px-2.5 py-1 rounded border border-court-border">
-                        {ex.sets} sets × {ex.reps}
+                      <span className={`text-xs font-metric font-bold px-2.5 py-1 rounded border ${
+                        isExAllDone
+                          ? "bg-emerald-950/40 border-emerald-500/40 text-emerald-400"
+                          : "bg-court-card border-court-border text-court-gold"
+                      }`}>
+                        {exSetsDone}/{ex.sets} sets • {ex.reps}
                       </span>
                     </div>
 
@@ -283,17 +343,17 @@ export default function WorkoutPage() {
                             e.stopPropagation();
                             handleToggleSet(exIdx, setIdx);
                           }}
-                          className={`p-2.5 rounded-xl border text-xs font-athletic uppercase font-bold transition-all flex items-center justify-between ${
+                          className={`p-3 rounded-xl border text-xs font-athletic uppercase font-bold transition-all duration-150 flex items-center justify-between cursor-pointer select-none active:scale-95 ${
                             isDone
-                              ? "bg-emerald-950/60 border-emerald-500/60 text-emerald-300 shadow-glow-emerald"
-                              : "bg-court-card border-court-border text-muted-foreground hover:text-white"
+                              ? "bg-emerald-950/80 border-emerald-500 text-emerald-300 shadow-glow-emerald ring-1 ring-emerald-400/50"
+                              : "bg-court-card border-court-border text-muted-foreground hover:text-white hover:border-court-orange hover:bg-court-cardHover"
                           }`}
                         >
-                          <span>Set {setIdx + 1}</span>
+                          <span className="tracking-wide">Set {setIdx + 1}</span>
                           {isDone ? (
-                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                            <CheckCircle2 className="w-4 h-4 text-emerald-400 fill-emerald-950" />
                           ) : (
-                            <span className="w-4 h-4 rounded-full border border-court-border" />
+                            <span className="w-4 h-4 rounded-full border-2 border-court-border/80 group-hover:border-court-orange" />
                           )}
                         </button>
                       ))}
@@ -303,6 +363,7 @@ export default function WorkoutPage() {
                     <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
                       <p className="italic text-[11px] truncate max-w-sm">&ldquo;{ex.cue}&rdquo;</p>
                       <button
+                        type="button"
                         onClick={(e) => {
                           e.stopPropagation();
                           setCurrentExerciseIndex(exIdx);
@@ -320,7 +381,11 @@ export default function WorkoutPage() {
 
             {/* Rest Timer & Action Column */}
             <div className="space-y-4">
-              <Timer initialSeconds={90} />
+              <Timer
+                key={timerKey}
+                initialSeconds={90}
+                autoStart={autoStartTimer}
+              />
 
               <Card variant="glass">
                 <CardHeader>
