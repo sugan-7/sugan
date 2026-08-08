@@ -17,6 +17,7 @@ import {
   HelpCircle,
   Play,
   HeartPulse,
+  ShieldCheck,
 } from "lucide-react";
 import { StreakIndicator } from "../ui/StreakIndicator";
 import { Button } from "../ui/Button";
@@ -46,9 +47,10 @@ export function DesktopSidebar() {
       ],
     },
     {
-      title: "Platform",
+      title: "Platform & Admin",
       items: [
         { label: "Athlete Settings", href: "/settings", icon: Settings },
+        { label: "Video Verification CMS", href: "/admin/exercises", icon: ShieldCheck },
         { label: "How VERTEX Works", href: "/how-it-works", icon: HelpCircle },
       ],
     },

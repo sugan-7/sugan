@@ -16,6 +16,12 @@ import {
   Trophy,
   Activity,
   HeartPulse,
+  Video,
+  ShieldCheck,
+  ChevronRight,
+  Info,
+  Layers,
+  Zap,
 } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/Button";
@@ -25,91 +31,63 @@ import { Timer } from "@/components/ui/Timer";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import { Drawer } from "@/components/ui/Drawer";
-import { ExerciseAnimatedVideo } from "@/components/ui/ExerciseAnimatedVideo";
+import { VerifiedExerciseVideoPlayer } from "@/components/ui/VerifiedExerciseVideoPlayer";
+import { VERIFIED_EXERCISE_DATABASE } from "@/data/verifiedExerciseDatabase";
+import { ExerciseModel } from "@/types/exerciseVideo";
 
-interface ExerciseItem {
-  id: string;
-  name: string;
-  category: "PLYOMETRIC" | "STRENGTH" | "ISOMETRIC" | "HYPERTROPHY";
+interface WorkoutExerciseState extends ExerciseModel {
   sets: number;
   reps: string;
   load: string;
-  cue: string;
-  mistake: string;
-  equipment: string;
   completedSets: boolean[];
 }
 
-const INITIAL_EXERCISES: ExerciseItem[] = [
+// Map the first 5 core prescription items for today's session
+const INITIAL_WORKOUT_SESSION: WorkoutExerciseState[] = [
   {
-    id: "ex-1",
-    name: "Low-Amplitude Pogo Hops",
-    category: "PLYOMETRIC",
+    ...VERIFIED_EXERCISE_DATABASE[0], // Pogo Hops
     sets: 3,
     reps: "15 hops",
     load: "Bodyweight",
-    cue: "Keep ankles stiff like springs. Minimum heel contact with the floor.",
-    mistake: "Letting heels drop and absorb elastic force.",
-    equipment: "None",
     completedSets: [false, false, false],
   },
   {
-    id: "ex-2",
-    name: "Depth Drops to Stick Landing",
-    category: "PLYOMETRIC",
+    ...VERIFIED_EXERCISE_DATABASE[1], // Depth Drops
     sets: 4,
     reps: "4 reps",
     load: "20-inch Box",
-    cue: "Step off the box, do not jump. Land silently in athletic universal position.",
-    mistake: "Stiff-legged landing or valgus knee collapse.",
-    equipment: "Plyo Box",
     completedSets: [false, false, false, false],
   },
   {
-    id: "ex-3",
-    name: "Trap Bar Deadlift (Speed Focus)",
-    category: "STRENGTH",
+    ...VERIFIED_EXERCISE_DATABASE[2], // Trap Bar Deadlift
     sets: 4,
     reps: "5 reps",
-    load: "70% 1RM (Accelerative)",
-    cue: "Drive feet through the court floor. Explosive hip extension.",
-    mistake: "Rounding upper back or slow lockout.",
-    equipment: "Trap Bar, Plates",
+    load: "70% 1RM (Speed)",
     completedSets: [false, false, false, false],
   },
   {
-    id: "ex-4",
-    name: "Isometric Split Squat Hold",
-    category: "ISOMETRIC",
+    ...VERIFIED_EXERCISE_DATABASE[3], // Isometric Split Squat
     sets: 3,
     reps: "30 sec / leg",
-    load: "Bodyweight / Dumbbells",
-    cue: "Front shin vertical. 90-degree knee flexion. Maximum patellar tendon loading.",
-    mistake: "Leaning torso excessively forward.",
-    equipment: "Dumbbells",
+    load: "Bodyweight / DB",
     completedSets: [false, false, false],
   },
   {
-    id: "ex-5",
-    name: "Seated Soleus Calf Raise",
-    category: "HYPERTROPHY",
+    ...VERIFIED_EXERCISE_DATABASE[4], // Seated Soleus Raise
     sets: 3,
     reps: "12 reps",
     load: "Moderate / Controlled",
-    cue: "Full stretch at the bottom. 2-second pause to isolate soleus tendon stiffness.",
-    mistake: "Bouncing weights at top.",
-    equipment: "Seated Bench, Dumbbells",
     completedSets: [false, false, false],
   },
 ];
 
 export default function WorkoutPage() {
-  const [exercises, setExercises] = useState<ExerciseItem[]>(INITIAL_EXERCISES);
+  const [exercises, setExercises] = useState<WorkoutExerciseState[]>(INITIAL_WORKOUT_SESSION);
   const [isWorkoutStarted, setIsWorkoutStarted] = useState(false);
   const [isWorkoutCompleted, setIsWorkoutCompleted] = useState(false);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [isSkipDialogOpen, setIsSkipDialogOpen] = useState(false);
-  const [isCueDrawerOpen, setIsCueDrawerOpen] = useState(false);
+  const [isVideoDrawerOpen, setIsVideoDrawerOpen] = useState(false);
   const [timerKey, setTimerKey] = useState(0);
   const [autoStartTimer, setAutoStartTimer] = useState(false);
 
@@ -175,12 +153,12 @@ export default function WorkoutPage() {
 
   return (
     <AppShell streakDays={4} readinessScore={88}>
-      <div className="space-y-6 max-w-4xl mx-auto">
+      <div className="space-y-6 max-w-5xl mx-auto">
         {/* WORKOUT HEADER */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-court-border/80 pb-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <Badge variant="orange">Live Session Player</Badge>
+              <Badge variant="orange">Verified Live Session</Badge>
               <span className="text-xs font-mono text-muted-foreground">
                 Phase 1: Foundation • Day 12
               </span>
@@ -191,12 +169,22 @@ export default function WorkoutPage() {
           </div>
 
           <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="md"
+              onClick={() => setIsVideoDrawerOpen(true)}
+              className="border-court-orange/40 text-court-orange hover:bg-court-orange/10 font-athletic font-bold uppercase"
+              leftIcon={<Video className="w-4 h-4 text-court-orange" />}
+            >
+              Watch Form Demo
+            </Button>
+
             {!isWorkoutStarted && !isWorkoutCompleted && (
               <Button
                 variant="primary"
                 size="md"
                 onClick={() => setIsWorkoutStarted(true)}
-                className="shadow-glow-orange font-black"
+                className="shadow-glow-orange font-black font-athletic uppercase"
                 leftIcon={<Play className="w-4 h-4 fill-white" />}
               >
                 Start Workout
@@ -205,9 +193,10 @@ export default function WorkoutPage() {
             {isWorkoutStarted && !isWorkoutCompleted && (
               <Button
                 variant="gold"
-                size="sm"
+                size="md"
                 onClick={handleFinishWorkout}
                 leftIcon={<CheckCircle2 className="w-4 h-4" />}
+                className="font-athletic font-bold uppercase"
               >
                 Finish Session
               </Button>
@@ -242,7 +231,7 @@ export default function WorkoutPage() {
                 Workout Completed!
               </h2>
               <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                Excellent effort. Your volume, tendon loading, and set completions are being logged to PostgreSQL.
+                Excellent effort. Your volume, tendon loading, and verified movement completions are recorded in PostgreSQL.
               </p>
             </div>
 
@@ -282,16 +271,16 @@ export default function WorkoutPage() {
               </div>
 
               <Link href="/dashboard" className="block pt-2">
-                <Button variant="primary" size="md" className="w-full shadow-glow-orange">
+                <Button variant="primary" size="md" className="w-full shadow-glow-orange font-athletic font-bold uppercase">
                   Save Performance & Return to Dashboard
                 </Button>
               </Link>
             </div>
           </motion.div>
         ) : (
-          /* ACTIVE EXERCISE LIST & REST TIMER */
+          /* ACTIVE EXERCISE LIST & VERIFIED VIDEO PLAYER */
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Exercises Column */}
+            {/* Left 2 Columns: Exercise Cards */}
             <div className="lg:col-span-2 space-y-4">
               {exercises.map((ex, exIdx) => {
                 const isSelected = exIdx === currentExerciseIndex;
@@ -319,19 +308,51 @@ export default function WorkoutPage() {
                           <span className="text-xs font-mono text-muted-foreground">
                             {ex.load}
                           </span>
+                          <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-500/30">
+                            {ex.publicationStatus}
+                          </span>
                         </div>
                         <h3 className="font-athletic text-xl font-black text-white uppercase">
                           {ex.name}
                         </h3>
                       </div>
 
-                      <span className={`text-xs font-metric font-bold px-2.5 py-1 rounded border ${
-                        isExAllDone
-                          ? "bg-emerald-950/40 border-emerald-500/40 text-emerald-400"
-                          : "bg-court-card border-court-border text-court-gold"
-                      }`}>
-                        {exSetsDone}/{ex.sets} sets • {ex.reps}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setCurrentExerciseIndex(exIdx);
+                            setIsVideoDrawerOpen(true);
+                          }}
+                          className="text-[11px] h-7 px-2.5 border-court-orange/40 text-court-orange hover:bg-court-orange/10 font-athletic font-bold"
+                          leftIcon={<Video className="w-3.5 h-3.5" />}
+                        >
+                          Watch Form
+                        </Button>
+
+                        <span
+                          className={`text-xs font-metric font-bold px-2.5 py-1 rounded border ${
+                            isExAllDone
+                              ? "bg-emerald-950/40 border-emerald-500/40 text-emerald-400"
+                              : "bg-court-card border-court-border text-court-gold"
+                          }`}
+                        >
+                          {exSetsDone}/{ex.sets} sets • {ex.reps}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Step-by-Step Setup & Starting Position Guide */}
+                    <div className="mb-3 p-3 rounded-xl bg-court-card/60 border border-court-border/40 text-xs space-y-1">
+                      <div className="flex items-center justify-between text-[10px] text-muted-foreground font-mono">
+                        <span className="font-athletic font-bold text-court-orange uppercase">
+                          Setup &amp; Starting Position
+                        </span>
+                        <span>Tempo: {ex.instructions.tempo}</span>
+                      </div>
+                      <p className="text-white/90 text-xs leading-relaxed">{ex.instructions.setup}</p>
                     </div>
 
                     {/* Interactive Set Checkboxes */}
@@ -362,17 +383,19 @@ export default function WorkoutPage() {
 
                     {/* Coaching Cue Snippet */}
                     <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
-                      <p className="italic text-[11px] truncate max-w-sm">&ldquo;{ex.cue}&rdquo;</p>
+                      <p className="italic text-[11px] truncate max-w-sm">
+                        &ldquo;{ex.coachingCues[0]}&rdquo;
+                      </p>
                       <button
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
                           setCurrentExerciseIndex(exIdx);
-                          setIsCueDrawerOpen(true);
+                          setIsVideoDrawerOpen(true);
                         }}
-                        className="text-court-orange hover:underline font-bold font-athletic uppercase text-[11px] shrink-0"
+                        className="text-court-orange hover:underline font-bold font-athletic uppercase text-[11px] shrink-0 inline-flex items-center gap-1"
                       >
-                        View Cues &amp; Form →
+                        Form Breakdown &amp; Video <ChevronRight className="w-3 h-3" />
                       </button>
                     </div>
                   </div>
@@ -380,59 +403,80 @@ export default function WorkoutPage() {
               })}
             </div>
 
-            {/* Rest Timer & Live Video Column */}
+            {/* Right Column: Verified Video Player & Rest Timer */}
             <div className="space-y-4">
-              {/* Biomechanical Animated Video Player */}
+              {/* Verified Video Player Component */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] uppercase font-bold tracking-wider font-athletic text-court-orange">
-                    Biomechanical Video Loop
+                  <span className="text-[10px] uppercase font-bold tracking-wider font-athletic text-court-orange flex items-center gap-1.5">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Verified Demonstration Video
                   </span>
                   <span className="text-[10px] font-mono text-muted-foreground">
-                    HD Animated Vectors
+                    Reviewer: {activeExercise.expertReviewer.split(",")[0]}
                   </span>
                 </div>
-                <ExerciseAnimatedVideo
-                  exerciseId={activeExercise.id}
-                  exerciseName={activeExercise.name}
-                  category={activeExercise.category}
+                <VerifiedExerciseVideoPlayer
+                  exercise={activeExercise}
                   aspectRatio="video"
+                  showTranscriptPanel={false}
                 />
               </div>
 
+              {/* Rest Interval Timer */}
               <Timer
                 key={timerKey}
                 initialSeconds={90}
                 autoStart={autoStartTimer}
               />
 
+              {/* Real Coaching Cues & Common Mistakes Card */}
               <Card variant="glass">
                 <CardHeader>
-                  <CardTitle className="text-lg">Coaching Cues</CardTitle>
+                  <CardTitle className="text-lg">Form Guidelines &amp; Safety</CardTitle>
                   <CardDescription>{activeExercise.name}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3 text-xs text-muted-foreground leading-relaxed">
-                  <div className="p-3 rounded-xl bg-court-card border border-court-border">
-                    <span className="font-athletic font-bold text-court-orange uppercase block mb-1">
-                      Key Movement Cue:
+                  <div className="p-3 rounded-xl bg-court-card border border-court-border space-y-1">
+                    <span className="font-athletic font-bold text-court-orange uppercase block text-[10px]">
+                      Key Movement Cues:
                     </span>
-                    <p>{activeExercise.cue}</p>
+                    <ul className="list-disc list-inside space-y-0.5 text-white/90 text-xs">
+                      {activeExercise.coachingCues.map((cue, i) => (
+                        <li key={i}>{cue}</li>
+                      ))}
+                    </ul>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-rose-950/20 border border-rose-800/30 text-rose-200/80">
-                    <span className="font-athletic font-bold text-rose-300 uppercase block mb-1">
-                      Common Mistake to Avoid:
+                  <div className="p-3 rounded-xl bg-rose-950/20 border border-rose-800/30 text-rose-200/90 space-y-1">
+                    <span className="font-athletic font-bold text-rose-300 uppercase block text-[10px]">
+                      Common Mistakes to Avoid:
                     </span>
-                    <p>{activeExercise.mistake}</p>
+                    <ul className="list-disc list-inside space-y-0.5 text-xs">
+                      {activeExercise.commonMistakes.map((mis, i) => (
+                        <li key={i}>{mis}</li>
+                      ))}
+                    </ul>
                   </div>
+
+                  {/* Regressions & Progressions Quick Guidance */}
+                  {activeExercise.regressions.length > 0 && (
+                    <div className="p-3 rounded-xl bg-court-card border border-court-border space-y-1">
+                      <span className="font-athletic font-bold text-court-cyan uppercase block text-[10px]">
+                        Safe Regression Alternative:
+                      </span>
+                      <p className="text-white/90 text-xs">
+                        <strong>{activeExercise.regressions[0].name}:</strong> {activeExercise.regressions[0].description}
+                      </p>
+                    </div>
+                  )}
 
                   <Button
                     variant="outline"
                     size="sm"
-                    className="w-full text-xs"
+                    className="w-full text-xs font-athletic uppercase font-bold"
                     onClick={() => setIsSkipDialogOpen(true)}
                   >
-                    Skip / Modify Exercise
+                    Modify / Swap Exercise
                   </Button>
                 </CardContent>
               </Card>
@@ -444,61 +488,103 @@ export default function WorkoutPage() {
         <ConfirmationDialog
           open={isSkipDialogOpen}
           onOpenChange={setIsSkipDialogOpen}
-          title="Skip or Modify Exercise"
-          description="If you are experiencing joint soreness or equipment unavailability, VERTEX will swap this movement for an isometric alternative."
-          confirmLabel="Swap for Low-Impact Alternative"
-          cancelLabel="Keep Exercise"
+          title="Modify or Regress Exercise"
+          description={`If you are experiencing joint soreness or equipment unavailability, VERTEX will automatically substitute with: ${activeExercise.regressions[0]?.name || "Isometric Hold"}.`}
+          confirmLabel="Apply Safe Regression"
+          cancelLabel="Keep Current Exercise"
           variant="primary"
           onConfirm={() => {
             setIsSkipDialogOpen(false);
           }}
         />
 
-        {/* Cues & Detail Drawer */}
+        {/* Full-Featured Modal Video Drawer */}
         <Drawer
-          open={isCueDrawerOpen}
-          onClose={() => setIsCueDrawerOpen(false)}
-          title={activeExercise.name}
+          open={isVideoDrawerOpen}
+          onClose={() => setIsVideoDrawerOpen(false)}
+          title={`Verified Demonstration: ${activeExercise.name}`}
         >
-          <div className="space-y-4 text-xs text-muted-foreground">
-            {/* Full-width Animated Biomechanical Video */}
-            <ExerciseAnimatedVideo
-              exerciseId={activeExercise.id}
-              exerciseName={activeExercise.name}
-              category={activeExercise.category}
+          <div className="space-y-5 text-xs text-muted-foreground">
+            {/* Full High-Definition Verified Video Player with Interactive Transcript */}
+            <VerifiedExerciseVideoPlayer
+              exercise={activeExercise}
               aspectRatio="video"
+              showTranscriptPanel={true}
             />
 
-            <div className="p-4 rounded-xl bg-court-card border border-court-border space-y-1">
-              <span className="text-[10px] uppercase font-bold text-court-orange font-athletic block">
-                Prescription
+            {/* Complete Movement Specification Breakdown */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="p-3.5 rounded-xl bg-court-card border border-court-border space-y-1">
+                <span className="text-[10px] uppercase font-bold text-court-orange font-athletic block">
+                  Prescription &amp; Load
+                </span>
+                <p className="font-bold text-white text-sm">
+                  {activeExercise.sets} sets × {activeExercise.reps} ({activeExercise.load})
+                </p>
+                <span className="text-[10px] text-muted-foreground">
+                  Tempo: {activeExercise.instructions.tempo}
+                </span>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-court-card border border-court-border space-y-1">
+                <span className="text-[10px] uppercase font-bold text-court-gold font-athletic block">
+                  Range of Motion &amp; Breathing
+                </span>
+                <p className="text-white text-xs leading-relaxed">
+                  {activeExercise.instructions.rangeOfMotion}. {activeExercise.instructions.breathingBracing}
+                </p>
+              </div>
+            </div>
+
+            {/* Detailed Instructions */}
+            <div className="p-4 rounded-xl bg-court-card border border-court-border space-y-2">
+              <span className="text-[10px] uppercase font-bold text-white font-athletic block">
+                Execution Instructions
               </span>
-              <p className="font-bold text-white text-sm">
-                {activeExercise.sets} sets × {activeExercise.reps} ({activeExercise.load})
+              <p className="text-muted-foreground text-xs leading-relaxed">
+                {activeExercise.instructions.execution}
               </p>
             </div>
 
-            <div className="p-4 rounded-xl bg-court-card border border-court-border space-y-1">
-              <span className="text-[10px] uppercase font-bold text-court-gold font-athletic block">
-                Primary Cue
-              </span>
-              <p className="text-white">{activeExercise.cue}</p>
+            {/* Safe Regressions & Progressions */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {activeExercise.regressions.map((reg, i) => (
+                <div key={i} className="p-3 rounded-xl bg-court-card/60 border border-court-border space-y-1">
+                  <span className="text-[10px] uppercase font-bold text-court-cyan font-athletic block">
+                    Regression: {reg.name}
+                  </span>
+                  <p className="text-[11px] text-muted-foreground">{reg.description}</p>
+                </div>
+              ))}
+              {activeExercise.progressions.map((prog, i) => (
+                <div key={i} className="p-3 rounded-xl bg-court-card/60 border border-court-border space-y-1">
+                  <span className="text-[10px] uppercase font-bold text-emerald-400 font-athletic block">
+                    Progression: {prog.name}
+                  </span>
+                  <p className="text-[11px] text-muted-foreground">{prog.description}</p>
+                </div>
+              ))}
             </div>
 
-            <div className="p-4 rounded-xl bg-rose-950/30 border border-rose-800/40 space-y-1 text-rose-200">
-              <span className="text-[10px] uppercase font-bold text-rose-400 font-athletic block">
-                Common Mistake
-              </span>
-              <p>{activeExercise.mistake}</p>
+            {/* Scientific Review & Verification Audit */}
+            <div className="p-3.5 rounded-xl bg-court-dark border border-court-border/80 text-[11px] space-y-2">
+              <div className="flex items-center justify-between text-muted-foreground">
+                <span>Expert Reviewer: <strong className="text-white">{activeExercise.expertReviewer}</strong></span>
+                <span>Review Date: <strong className="text-court-gold">{activeExercise.reviewDate}</strong></span>
+              </div>
+              <div className="flex items-center justify-between text-muted-foreground">
+                <span>License: <strong className="text-white">{activeExercise.licenseStatus}</strong></span>
+                <span>Version: <strong className="text-court-cyan">{activeExercise.contentVersion}</strong></span>
+              </div>
             </div>
 
             <Button
               variant="primary"
               size="md"
-              className="w-full mt-4 shadow-glow-orange"
-              onClick={() => setIsCueDrawerOpen(false)}
+              className="w-full mt-4 shadow-glow-orange font-athletic font-bold uppercase"
+              onClick={() => setIsVideoDrawerOpen(false)}
             >
-              Resume Workout
+              Resume Workout Session
             </Button>
           </div>
         </Drawer>

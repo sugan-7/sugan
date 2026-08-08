@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
@@ -35,6 +36,46 @@ export default function AdminPortalPage() {
           </div>
         </div>
 
+        {/* Exercise Video Content System Card */}
+        <Card variant="glass" className="border-court-orange/40 shadow-glow-orange">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <ShieldAlert className="w-5 h-5 text-court-orange" />
+                <CardTitle className="text-xl">Exercise Video Verification &amp; CMS</CardTitle>
+              </div>
+              <Link href="/admin/exercises">
+                <Button variant="primary" size="sm" className="font-athletic font-bold uppercase text-xs">
+                  Manage Video Library →
+                </Button>
+              </Link>
+            </div>
+            <CardDescription>
+              Review, approve, and verify demonstration videos, step-by-step setup guides, and source licenses for 44+ platform movements.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+              <div className="p-3 rounded-xl bg-court-card border border-court-border">
+                <span className="text-[10px] text-muted-foreground uppercase font-bold block">Demonstrations</span>
+                <span className="text-lg font-bold text-white">44 Movements</span>
+              </div>
+              <div className="p-3 rounded-xl bg-court-card border border-court-border">
+                <span className="text-[10px] text-muted-foreground uppercase font-bold block">Status Standard</span>
+                <span className="text-lg font-bold text-emerald-400">Zero Placeholders</span>
+              </div>
+              <div className="p-3 rounded-xl bg-court-card border border-court-border">
+                <span className="text-[10px] text-muted-foreground uppercase font-bold block">Captions &amp; Transcripts</span>
+                <span className="text-lg font-bold text-court-cyan">Interactive VTT</span>
+              </div>
+              <div className="p-3 rounded-xl bg-court-card border border-court-border">
+                <span className="text-[10px] text-muted-foreground uppercase font-bold block">License Audit</span>
+                <span className="text-lg font-bold text-court-gold">Reviewed</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Feature Flags Grid */}
         <Card variant="glass">
           <CardHeader>
@@ -42,7 +83,7 @@ export default function AdminPortalPage() {
               <Cpu className="w-5 h-5 text-court-orange" />
               <CardTitle className="text-xl">Runtime Feature Flags</CardTitle>
             </div>
-            <CardDescription>Managed via FeatureFlagService & PostgreSQL source of truth</CardDescription>
+            <CardDescription>Managed via FeatureFlagService &amp; PostgreSQL source of truth</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

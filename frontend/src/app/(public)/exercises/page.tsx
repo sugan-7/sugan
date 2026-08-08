@@ -2,99 +2,32 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Search, Filter, Dumbbell, PlayCircle, ShieldCheck } from "lucide-react";
+import { Search, Filter, Dumbbell, PlayCircle, ShieldCheck, Video, Info } from "lucide-react";
 import { Navbar } from "@/components/common/Navbar";
 import { Footer } from "@/components/common/Footer";
 import { ExerciseCard } from "@/components/ui/ExerciseCard";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { VERIFIED_EXERCISE_DATABASE } from "@/data/verifiedExerciseDatabase";
+import { ExerciseCategory } from "@/types/exerciseVideo";
 
 export default function ExercisesPublicPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
+  const [onlyWithVideo, setOnlyWithVideo] = useState(false);
 
-  const exerciseDatabase = [
-    {
-      id: "ex-1",
-      name: "Low-Amplitude Pogo Hops",
-      category: "PLYOMETRIC" as const,
-      movementPattern: "Ankle Plantarflexion",
-      targetSets: 3,
-      targetReps: "15 reps",
-      loadGuidance: "Bodyweight",
-      coachingCue: "Stiff ankles like springs. Minimum ground contact time.",
-      equipment: ["None"],
-      videoAvailable: true,
-    },
-    {
-      id: "ex-2",
-      name: "Depth Drops to Stick",
-      category: "PLYOMETRIC" as const,
-      movementPattern: "Landing Deceleration",
-      targetSets: 4,
-      targetReps: "4 reps",
-      loadGuidance: "20-in Box",
-      coachingCue: "Step off, do not jump. Land silently in athletic position.",
-      equipment: ["Plyo Box"],
-      videoAvailable: true,
-    },
-    {
-      id: "ex-3",
-      name: "Trap Bar Deadlift (RFD Speed)",
-      category: "STRENGTH" as const,
-      movementPattern: "Hip Hinge",
-      targetSets: 4,
-      targetReps: "5 reps",
-      loadGuidance: "70% 1RM Accelerative",
-      coachingCue: "Drive feet through floor. Explosive hip lockout.",
-      equipment: ["Trap Bar", "Plates"],
-      videoAvailable: true,
-    },
-    {
-      id: "ex-4",
-      name: "Isometric Split Squat",
-      category: "ISOMETRIC" as const,
-      movementPattern: "Knee Dominant Hold",
-      targetSets: 3,
-      targetReps: "30s hold",
-      loadGuidance: "Bodyweight",
-      coachingCue: "Front shin vertical. 90-degree knee flexion.",
-      equipment: ["None"],
-      videoAvailable: false,
-    },
-    {
-      id: "ex-5",
-      name: "Seated Soleus Calf Raise",
-      category: "HYPERTROPHY" as const,
-      movementPattern: "Soleus Isolation",
-      targetSets: 3,
-      targetReps: "12 reps",
-      loadGuidance: "Moderate Weight",
-      coachingCue: "Full stretch at bottom. 2-second pause.",
-      equipment: ["Dumbbells", "Bench"],
-      videoAvailable: false,
-    },
-    {
-      id: "ex-6",
-      name: "Penultimate Step Approach Bounds",
-      category: "PLYOMETRIC" as const,
-      movementPattern: "Horizontal to Vertical Conversion",
-      targetSets: 4,
-      targetReps: "3 per side",
-      loadGuidance: "Max Speed",
-      coachingCue: "Low penultimate plant foot, punch the block foot.",
-      equipment: ["Court / Open Space"],
-      videoAvailable: true,
-    },
-  ];
+  const categories = ["ALL", "PLYOMETRIC", "STRENGTH", "ISOMETRIC", "HYPERTROPHY", "MOBILITY"];
 
-  const categories = ["ALL", "PLYOMETRIC", "STRENGTH", "ISOMETRIC", "HYPERTROPHY"];
-
-  const filteredExercises = exerciseDatabase.filter((ex) => {
-    const matchesSearch = ex.name.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredExercises = VERIFIED_EXERCISE_DATABASE.filter((ex) => {
+    const matchesSearch =
+      ex.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ex.subcategory.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ex.coachingCues.some((c) => c.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesCategory = selectedCategory === "ALL" || ex.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const matchesVideo = !onlyWithVideo || Boolean(ex.videoUrl);
+
+    return matchesSearch && matchesCategory && matchesVideo;
   });
 
   return (
@@ -104,19 +37,24 @@ export default function ExercisesPublicPage() {
       <main className="flex-1 container mx-auto px-4 sm:px-6 py-12 max-w-6xl space-y-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-court-border/80 pb-6">
           <div>
-            <Badge variant="orange" size="sm" className="mb-1">
-              Biomechanical Movement Library
-            </Badge>
+            <div className="flex items-center gap-2 mb-1">
+              <Badge variant="orange" size="sm">
+                Verified Movement Library
+              </Badge>
+              <span className="text-xs font-mono text-emerald-400">
+                {VERIFIED_EXERCISE_DATABASE.length} Evidence-Informed Exercises
+              </span>
+            </div>
             <h1 className="text-3xl sm:text-5xl font-black font-athletic uppercase tracking-tight text-white">
-              Exercise Database
+              Exercise &amp; Video Database
             </h1>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-              Validated movement patterns with coaching cues, load parameters, and video demonstrations.
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1 max-w-2xl">
+              Standardized basketball performance movements with step-by-step setup instructions, evidence references, verified video demonstrations, and safety guidelines.
             </p>
           </div>
 
           <Link href="/register">
-            <Button variant="primary" size="sm" className="shadow-glow-orange">
+            <Button variant="primary" size="sm" className="shadow-glow-orange font-athletic font-bold uppercase">
               Start Assessment
             </Button>
           </Link>
@@ -126,7 +64,7 @@ export default function ExercisesPublicPage() {
         <div className="flex flex-col sm:flex-row items-center gap-4">
           <div className="flex-1 w-full">
             <Input
-              placeholder="Search exercise name or cue..."
+              placeholder="Search exercise name, movement cue, or equipment..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               leftIcon={<Search className="w-4 h-4" />}
@@ -140,12 +78,37 @@ export default function ExercisesPublicPage() {
                 variant={selectedCategory === cat ? "primary" : "secondary"}
                 size="sm"
                 onClick={() => setSelectedCategory(cat)}
-                className="text-xs"
+                className="text-xs font-athletic uppercase font-bold"
               >
                 {cat}
               </Button>
             ))}
+
+            <button
+              type="button"
+              onClick={() => setOnlyWithVideo(!onlyWithVideo)}
+              className={`px-3 py-1.5 rounded-xl border text-xs font-athletic uppercase font-bold transition-colors whitespace-nowrap ${
+                onlyWithVideo
+                  ? "bg-court-orange/20 border-court-orange text-court-orange"
+                  : "bg-court-card border-court-border text-muted-foreground hover:text-white"
+              }`}
+            >
+              Video Only
+            </button>
           </div>
+        </div>
+
+        {/* Video System Verification Banner */}
+        <div className="p-3.5 rounded-2xl bg-court-charcoal/80 border border-court-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span>
+              <strong>VERTEX Standard:</strong> Every exercise video is reviewed for technical accuracy, safety regressions, and licensed source verification.
+            </span>
+          </div>
+          <span className="text-[10px] font-mono text-court-gold shrink-0">
+            Illustrative Movement Guides
+          </span>
         </div>
 
         {/* Exercises Grid */}
@@ -156,13 +119,13 @@ export default function ExercisesPublicPage() {
               id={ex.id}
               name={ex.name}
               category={ex.category}
-              movementPattern={ex.movementPattern}
-              targetSets={ex.targetSets}
-              targetReps={ex.targetReps}
-              loadGuidance={ex.loadGuidance}
-              coachingCue={ex.coachingCue}
+              movementPattern={ex.subcategory}
+              targetSets={3}
+              targetReps={ex.instructions.tempo}
+              loadGuidance={ex.equipment.join(", ")}
+              coachingCue={ex.coachingCues[0]}
               equipment={ex.equipment}
-              videoAvailable={ex.videoAvailable}
+              videoAvailable={Boolean(ex.videoUrl)}
             />
           ))}
         </div>
