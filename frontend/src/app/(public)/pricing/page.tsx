@@ -36,7 +36,7 @@ export default function PricingPage() {
               Athlete Foundation Tier
             </h3>
             <p className="text-xs text-muted-foreground mb-6">
-              Complete manual jump assessment, Jump Lab tracking, and deterministic 8-week periodized program.
+              Complete athletic profile assessment, vertical progress analytics, and deterministic 8-week periodized program.
             </p>
             <div className="space-y-3 text-xs text-muted-foreground mb-8">
               <div className="flex items-center gap-2">

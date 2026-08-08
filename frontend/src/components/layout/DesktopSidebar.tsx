@@ -32,7 +32,6 @@ export function DesktopSidebar() {
       items: [
         { label: "Athlete Dashboard", href: "/dashboard", icon: LayoutDashboard },
         { label: "Today's Workout", href: "/workout", icon: Dumbbell, highlight: true },
-        { label: "Jump Lab & Baseline", href: "/jump-lab", icon: Activity },
         { label: "8-Week Program", href: "/program", icon: Layers },
       ],
     },

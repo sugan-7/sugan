@@ -20,9 +20,9 @@ export default function HowItWorksPage() {
     },
     {
       num: "02",
-      title: "Jump Lab Manual Assessment",
-      desc: "Record standing reach, max standing touch, approach touch, and takeoff style. We compute your Standing Vertical and Approach Advantage transparently with zero fabricated PRs.",
-      icon: Activity,
+      title: "Athletic Profile & Target Goals",
+      desc: "Define your competitive basketball goals, target vertical milestones, and schedule availability with transparent progress tracking.",
+      icon: Target,
       color: "text-court-gold",
     },
     {

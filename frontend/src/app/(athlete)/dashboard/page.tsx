@@ -80,11 +80,6 @@ export default function AthleteDashboardPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Link href="/jump-lab">
-              <Button variant="outline" size="sm" leftIcon={<Activity className="w-3.5 h-3.5" />}>
-                Open Jump Lab
-              </Button>
-            </Link>
             <Link href="/workout">
               <Button variant="primary" size="sm" className="shadow-glow-orange" leftIcon={<Dumbbell className="w-3.5 h-3.5" />}>
                 Start Today&apos;s Workout

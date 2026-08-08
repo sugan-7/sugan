@@ -33,7 +33,7 @@ export function Footer() {
             <ul className="space-y-2 text-xs text-muted-foreground">
               <li><Link href="/register" className="hover:text-court-gold">Start Assessment</Link></li>
               <li><Link href="/dashboard" className="hover:text-court-gold">Athlete Dashboard</Link></li>
-              <li><Link href="/jump-lab" className="hover:text-court-gold">Jump Lab</Link></li>
+              <li><Link href="/program" className="hover:text-court-gold">8-Week Program</Link></li>
               <li><Link href="/login" className="hover:text-court-gold">Sign In</Link></li>
             </ul>
           </div>

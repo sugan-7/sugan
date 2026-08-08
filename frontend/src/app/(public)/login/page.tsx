@@ -58,7 +58,7 @@ export default function LoginPage() {
               Sign In to VERTEX
             </CardTitle>
             <CardDescription className="text-xs">
-              Access your training schedule, Jump Lab, and performance analytics
+              Access your training schedule, workout player, and performance analytics
             </CardDescription>
           </CardHeader>
 

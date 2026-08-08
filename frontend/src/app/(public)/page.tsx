@@ -439,49 +439,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* =========================================================================
-            SECTION 7: JUMP LAB & VERTICAL TRACKING
-        ========================================================================= */}
-        <section className="py-24 border-b border-court-border/80 bg-court-charcoal/30">
-          <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
-            <div className="text-center max-w-2xl mx-auto mb-16">
-              <Badge variant="cyan" className="mb-3">Jump Lab Hub</Badge>
-              <h2 className="text-3xl sm:text-5xl font-black font-athletic tracking-tight uppercase">
-                Transparent Jump Provenance
-              </h2>
-              <p className="text-muted-foreground text-sm mt-3">
-                Every measurement is derived from verified standing reach and touch logs. We never invent PRs or fabricate gains.
-              </p>
-            </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <MetricCard
-                label="Standing Vertical"
-                value={null}
-                unit="cm"
-                statusLabel="Standing Touch - Reach"
-                subtext="Pure lower-body force"
-                isPlatformDerived={false}
-              />
-              <MetricCard
-                label="Approach Vertical"
-                value={null}
-                unit="cm"
-                statusLabel="Full Approach"
-                subtext="Max kinetic momentum"
-                isPlatformDerived={false}
-              />
-              <MetricCard
-                label="Approach Advantage"
-                value={null}
-                unit="cm"
-                statusLabel="Kinetic Conversion"
-                subtext="Approach - Standing"
-                isPlatformDerived={true}
-              />
-            </div>
-          </div>
-        </section>
 
         {/* =========================================================================
             SECTION 8: PROGRESS ANALYTICS
@@ -688,7 +646,7 @@ export default function LandingPage() {
                   Athlete Foundation
                 </h3>
                 <p className="text-xs text-muted-foreground mb-6">
-                  Complete manual jump assessment, baseline Jump Lab tracking, and deterministic 8-week program generation.
+                  Complete athletic profile assessment, deterministic 8-week periodized program, and recovery analytics.
                 </p>
                 <div className="space-y-3 text-xs text-muted-foreground mb-8">
                   <div className="flex items-center gap-2">

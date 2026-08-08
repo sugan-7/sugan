@@ -85,9 +85,8 @@ export default function OnboardingPage() {
     { id: 3, title: "Experience" },
     { id: 4, title: "Equipment" },
     { id: 5, title: "Safety" },
-    { id: 6, title: "Jump Lab" },
-    { id: 7, title: "Goals" },
-    { id: 8, title: "Plan Review" },
+    { id: 6, title: "Goals" },
+    { id: 7, title: "Plan Review" },
   ];
 
   const handleNext = () => {
@@ -381,75 +380,8 @@ export default function OnboardingPage() {
                 </div>
               )}
 
-              {/* STEP 6: MANUAL JUMP ASSESSMENT */}
+              {/* STEP 6: ATHLETIC GOALS */}
               {currentStep === 5 && (
-                <div className="space-y-4">
-                  <CardHeader>
-                    <CardTitle>Jump Lab Manual Assessment</CardTitle>
-                    <CardDescription>
-                      Measure your standing reach and max touch against a backboard or measuring device.
-                    </CardDescription>
-                  </CardHeader>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <Input
-                      label="Standing Reach (cm)"
-                      type="number"
-                      value={formData.standingReachCm}
-                      onChange={(e) => setFormData({ ...formData, standingReachCm: e.target.value })}
-                      helperText="Reach flat-footed with fingertips"
-                      required
-                    />
-                    <Input
-                      label="Max Standing Touch (cm)"
-                      type="number"
-                      value={formData.standingTouchCm}
-                      onChange={(e) => setFormData({ ...formData, standingTouchCm: e.target.value })}
-                      helperText="Touch without running approach"
-                      required
-                    />
-                    <Input
-                      label="Full Approach Touch (cm)"
-                      type="number"
-                      value={formData.approachTouchCm}
-                      onChange={(e) => setFormData({ ...formData, approachTouchCm: e.target.value })}
-                      helperText="Max running approach touch"
-                      required
-                    />
-                  </div>
-
-                  {/* Real-time Computed Provenance Output */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 rounded-2xl bg-court-card border border-court-border">
-                    <div>
-                      <span className="text-[10px] font-athletic uppercase font-bold text-muted-foreground block">
-                        Standing Vertical
-                      </span>
-                      <span className="text-2xl font-black font-metric text-white">
-                        {standingVertical.toFixed(1)} cm
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-[10px] font-athletic uppercase font-bold text-muted-foreground block">
-                        Approach Vertical
-                      </span>
-                      <span className="text-2xl font-black font-metric text-court-gold">
-                        {approachVertical.toFixed(1)} cm
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-[10px] font-athletic uppercase font-bold text-muted-foreground block">
-                        Approach Advantage
-                      </span>
-                      <span className="text-2xl font-black font-metric text-court-cyan">
-                        +{approachAdvantage.toFixed(1)} cm
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* STEP 7: ATHLETIC GOALS */}
-              {currentStep === 6 && (
                 <div className="space-y-4">
                   <CardHeader>
                     <CardTitle>Primary Athletic Target</CardTitle>
@@ -477,14 +409,14 @@ export default function OnboardingPage() {
                       type="number"
                       value={formData.targetVerticalCm}
                       onChange={(e) => setFormData({ ...formData, targetVerticalCm: e.target.value })}
-                      helperText={`Current Gap: ${goalGap.toFixed(1)} cm from baseline (${standingVertical.toFixed(1)} cm)`}
+                      helperText="Desired peak vertical target height"
                     />
                   </div>
                 </div>
               )}
 
-              {/* STEP 8: PLAN REVIEW & SUBMIT */}
-              {currentStep === 7 && (
+              {/* STEP 7: PLAN REVIEW & SUBMIT */}
+              {currentStep === 6 && (
                 <div className="space-y-4">
                   <CardHeader>
                     <div className="flex items-center gap-2">

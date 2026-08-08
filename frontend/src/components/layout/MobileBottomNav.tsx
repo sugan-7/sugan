@@ -18,7 +18,6 @@ export function MobileBottomNav() {
 
   const navItems = [
     { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { label: "Jump Lab", href: "/jump-lab", icon: Activity },
     { label: "Workout", href: "/workout", icon: Dumbbell, isPrimary: true },
     { label: "Analytics", href: "/progress", icon: BarChart3 },
     { label: "Exercises", href: "/exercises", icon: Flame },
