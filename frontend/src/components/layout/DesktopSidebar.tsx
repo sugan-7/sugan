@@ -18,6 +18,7 @@ import {
   Play,
   HeartPulse,
   ShieldCheck,
+  LogOut,
 } from "lucide-react";
 import { StreakIndicator } from "../ui/StreakIndicator";
 import { Button } from "../ui/Button";
@@ -117,19 +118,36 @@ export function DesktopSidebar() {
         ))}
       </div>
 
-      {/* Footer / Quick Workout Start */}
-      <div className="p-4 border-t border-court-border/80 bg-court-charcoal/40 space-y-3">
+      {/* Footer / Quick Workout Start & Logout */}
+      <div className="p-4 border-t border-court-border/80 bg-court-charcoal/40 space-y-2.5">
         <Link href="/workout" className="block">
           <Button
             variant="primary"
             size="sm"
-            className="w-full justify-center shadow-glow-orange"
+            className="w-full justify-center shadow-glow-orange font-athletic font-bold uppercase text-xs"
             leftIcon={<Play className="w-3.5 h-3.5 fill-current" />}
           >
             Launch Workout
           </Button>
         </Link>
-        <div className="flex items-center justify-between text-[10px] text-muted-foreground px-1 font-mono">
+
+        <button
+          type="button"
+          onClick={() => {
+            if (typeof window !== "undefined") {
+              localStorage.removeItem("vertex_user_email");
+              localStorage.removeItem("vertex_auth_token");
+              sessionStorage.clear();
+              window.location.href = "/login";
+            }
+          }}
+          className="flex items-center justify-center gap-2 w-full py-1.5 px-3 rounded-xl bg-court-card/40 hover:bg-rose-950/40 border border-court-border/60 hover:border-rose-500/50 text-muted-foreground hover:text-rose-300 text-xs font-athletic uppercase font-bold transition-all duration-150"
+        >
+          <LogOut className="w-3.5 h-3.5 text-rose-400" />
+          <span>Log Out</span>
+        </button>
+
+        <div className="flex items-center justify-between text-[10px] text-muted-foreground px-1 font-mono pt-1 border-t border-court-border/40">
           <span>UTC Storage</span>
           <span className="text-emerald-400 font-bold">● Engine Online</span>
         </div>
