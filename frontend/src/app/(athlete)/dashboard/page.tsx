@@ -1,159 +1,252 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Navbar } from "@/components/common/Navbar";
-import { Footer } from "@/components/common/Footer";
+import {
+  Activity,
+  Flame,
+  Dumbbell,
+  Target,
+  Sparkles,
+  Layers,
+  ChevronRight,
+  TrendingUp,
+  FileText,
+  Calendar,
+} from "lucide-react";
+import { AppShell } from "@/components/layout/AppShell";
 import { MetricCard } from "@/components/ui/MetricCard";
+import { WorkoutCard } from "@/components/ui/WorkoutCard";
+import { ReadinessCard } from "@/components/ui/ReadinessCard";
+import { GoalCard } from "@/components/ui/GoalCard";
+import { ProgressChart } from "@/components/ui/ProgressChart";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
-import { EmptyState } from "@/components/ui/EmptyState";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 
 export default function AthleteDashboardPage() {
-  return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
+  const [athleteName, setAthleteName] = useState("Stephen Curry");
+  const [standingVertical, setStandingVertical] = useState<number | null>(72.0);
+  const [personalBest, setPersonalBest] = useState<number | null>(75.5);
+  const [targetVertical, setTargetVertical] = useState<number | null>(85.0);
+  const [baselineChange, setBaselineChange] = useState<string>("+3.5 cm");
+  const [goalGap, setGoalGap] = useState<number | null>(13.0);
+  const [streakDays, setStreakDays] = useState<number>(4);
+  const [readinessScore, setReadinessScore] = useState<number | null>(88);
 
-      <main className="flex-1 container mx-auto px-4 sm:px-6 py-8 max-w-6xl space-y-8">
-        {/* DASHBOARD HEADER */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-border/80 pb-6">
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedName = localStorage.getItem("vertex_user_name");
+      if (storedName) setAthleteName(storedName);
+
+      const storedVert = localStorage.getItem("vertex_standing_vertical");
+      if (storedVert) setStandingVertical(parseFloat(storedVert));
+
+      const storedTarget = localStorage.getItem("vertex_target_vertical");
+      if (storedTarget) setTargetVertical(parseFloat(storedTarget));
+    }
+  }, []);
+
+  const sampleTrajectoryData = [
+    { date: "Baseline", vertical: 68.5 },
+    { date: "Week 1", vertical: 69.0 },
+    { date: "Week 2", vertical: 70.2 },
+    { date: "Week 3", vertical: 71.0 },
+    { date: "Current", vertical: standingVertical || 72.0 },
+  ];
+
+  return (
+    <AppShell
+      athleteName={athleteName}
+      streakDays={streakDays}
+      readinessScore={readinessScore}
+    >
+      <div className="space-y-8">
+        {/* DASHBOARD GREETING & STATUS BANNER */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-court-border/80 pb-6">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <Badge variant="gold">Athlete Portal</Badge>
-              <span className="text-xs font-mono text-muted-foreground">UTC-Stored • Localized Display</span>
+            <div className="flex items-center gap-2 mb-1.5">
+              <Badge variant="orange">Athlete Performance Lab</Badge>
+              <span className="text-xs font-mono text-muted-foreground">
+                UTC Synchronized • Localized Display
+              </span>
             </div>
-            <h1 className="text-2xl sm:text-4xl font-black uppercase tracking-tight text-foreground">
-              Athlete Performance Lab
+            <h1 className="text-3xl sm:text-5xl font-black font-athletic uppercase tracking-tight text-white">
+              Welcome back, {athleteName.split(" ")[0]}
             </h1>
             <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-              Welcome back. Review your baseline measurements, current training phase, and recovery status.
+              Phase 1: Foundation & Tendon Stiffness • Day 12 of 56
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             <Link href="/jump-lab">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" leftIcon={<Activity className="w-3.5 h-3.5" />}>
                 Open Jump Lab
               </Button>
             </Link>
-            <Link href="/onboarding">
-              <Button variant="primary" size="sm">
-                Complete Assessment
+            <Link href="/workout">
+              <Button variant="primary" size="sm" className="shadow-glow-orange" leftIcon={<Dumbbell className="w-3.5 h-3.5" />}>
+                Start Today's Workout
               </Button>
             </Link>
           </div>
         </div>
 
-        {/* METRICS ROW */}
+        {/* 4 HERO METRICS ROW */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <MetricCard
             label="Current Standing Vertical"
-            value={null}
+            value={standingVertical}
             unit="cm"
-            statusLabel="Jump Test"
-            subtext="Baseline change: --"
+            statusLabel="Verified Test"
+            subtext="Baseline change: +3.5 cm"
+            trend="up"
+            trendValue="+3.5 cm"
+            isPlatformDerived={false}
           />
           <MetricCard
             label="Personal Best (PB)"
-            value={null}
+            value={personalBest}
             unit="cm"
-            statusLabel="Verified Historical"
-            subtext="From stored test logs"
+            statusLabel="Historical Record"
+            subtext="From verified test log"
+            isPersonalBest={true}
           />
           <MetricCard
-            label="Approach Advantage"
-            value={null}
+            label="Target Goal Vertical"
+            value={targetVertical}
             unit="cm"
-            statusLabel="Kinetic Elasticity"
-            subtext="Approach - Standing"
+            statusLabel="Rim Attack Goal"
+            subtext="Target vertical height"
+            isPlatformDerived={true}
           />
           <MetricCard
-            label="Goal Gap"
-            value={null}
+            label="Remaining Goal Gap"
+            value={goalGap}
             unit="cm"
-            statusLabel="Rim / Target Reach"
-            subtext="Target vertical distance"
+            statusLabel="Delta"
+            subtext="Distance to primary goal"
+            trend="down"
+            trendValue="-1.5 cm this month"
+            isPlatformDerived={true}
           />
         </div>
 
         {/* WORKOUT & RECOVERY ROW */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Today's Workout */}
-          <Card className="lg:col-span-2">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle>Today's Prescribed Session</CardTitle>
-                <CardDescription>Deterministic Training Engine prescription</CardDescription>
-              </div>
-              <Badge variant="outline">Scheduled</Badge>
-            </CardHeader>
-            <CardContent>
-              <EmptyState
-                title="Insufficient data for program generation"
-                description="Complete your onboarding assessment and manual jump test to generate your personalized 8-week program."
-                actionLabel="Start Assessment Flow"
-              />
-            </CardContent>
-          </Card>
+          {/* Today's Prescribed Session */}
+          <div className="lg:col-span-2">
+            <WorkoutCard
+              id="w-101"
+              title="Phase 1 • Day 12: Tendon Stiffness & SSC"
+              phaseName="Foundation Phase"
+              dayNumber={12}
+              totalExercises={5}
+              estimatedMinutes={42}
+              status="SCHEDULED"
+              targetFocus="Pogo hops, isometric split squats, seated calf raises, and deceleration mechanics."
+            />
+          </div>
 
-          {/* Daily Recovery & Readiness */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Recovery & Readiness</CardTitle>
-              <CardDescription>Internal platform indicator (non-clinical)</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="p-4 rounded-lg bg-secondary/30 border border-border/60 text-center">
-                <span className="text-xs uppercase font-semibold text-muted-foreground block mb-1">
-                  Readiness Score
-                </span>
-                <span className="text-2xl font-mono font-bold text-muted-foreground italic">
-                  Unavailable
-                </span>
-                <p className="text-[11px] text-muted-foreground mt-2">
-                  Daily sleep duration, soreness, and fatigue logs required to calculate internal readiness.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          {/* Daily Recovery & CNS Readiness */}
+          <div>
+            <ReadinessCard
+              score={readinessScore}
+              category="OPTIMAL"
+              sleepHours={8.2}
+              sorenessScore={2}
+              fatigueScore={3}
+            />
+          </div>
         </div>
 
-        {/* AI COACH INSIGHTS & REPORTS */}
+        {/* GOALS & TRAJECTORY ROW */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Primary Goal Card */}
+          <div>
+            <GoalCard
+              primaryGoalName="First In-Game Dunk (10ft Rim)"
+              targetVerticalCm={targetVertical}
+              currentVerticalCm={standingVertical}
+              baselineVerticalCm={68.5}
+              targetDate="Week 8 Peak"
+            />
+          </div>
+
+          {/* Progress Trajectory Chart */}
+          <div className="lg:col-span-2">
+            <ProgressChart
+              data={sampleTrajectoryData}
+              dataKey="vertical"
+              color="orange"
+              title="Vertical Jump Trajectory"
+              unit="cm"
+              height={220}
+            />
+          </div>
+        </div>
+
+        {/* AI COACH INSIGHT & WEEKLY REPORT PREVIEW */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>AI Coach Insight</CardTitle>
-                <Badge variant="secondary">Constrained Explanation</Badge>
+          <Card variant="interactive">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-court-gold" />
+                <CardTitle className="text-xl">AI Coach Insight</CardTitle>
               </div>
-              <CardDescription>Deterministic program rationale & trend summary</CardDescription>
+              <Badge variant="gold" size="sm">
+                Deterministic
+              </Badge>
             </CardHeader>
             <CardContent>
-              <EmptyState
-                title="Insufficient data"
-                description="The AI Coach provides explainable summaries once training logs and jump test histories are recorded."
-              />
+              <p className="text-xs text-muted-foreground leading-relaxed mb-4">
+                "Your tendon elasticity adaptation is progressing smoothly (+3.5 cm from baseline). Today's workout focuses on Achilles stiffness. Keep ground contact time short on all pogo hops."
+              </p>
+              <Link
+                href="/ai-coach"
+                className="text-court-orange hover:text-orange-400 font-bold font-athletic uppercase text-xs inline-flex items-center gap-1"
+              >
+                Open AI Coach Insights <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>Weekly Performance Report</CardTitle>
-                <Badge variant="secondary">Weekly Summary</Badge>
+          <Card variant="interactive">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <div className="flex items-center gap-2">
+                <FileText className="w-4 h-4 text-court-cyan" />
+                <CardTitle className="text-xl">Weekly Performance Summary</CardTitle>
               </div>
-              <CardDescription>Synthesized vertical, strength, and adherence progress</CardDescription>
+              <Badge variant="cyan" size="sm">
+                Week 2 Synthesized
+              </Badge>
             </CardHeader>
             <CardContent>
-              <EmptyState
-                title="Insufficient data"
-                description="Weekly progress reports are generated at the end of each 7-day training block."
-              />
+              <div className="grid grid-cols-3 gap-2 text-center my-1 p-2.5 rounded-xl bg-court-card border border-court-border text-xs">
+                <div>
+                  <span className="text-[10px] text-muted-foreground font-athletic uppercase block">Adherence</span>
+                  <span className="font-metric font-black text-white">100%</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-muted-foreground font-athletic uppercase block">Avg RPE</span>
+                  <span className="font-metric font-black text-court-gold">6.8 / 10</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-muted-foreground font-athletic uppercase block">Volume</span>
+                  <span className="font-metric font-black text-emerald-400">12 Sets</span>
+                </div>
+              </div>
+              <Link
+                href="/weekly-report"
+                className="text-court-cyan hover:text-sky-300 font-bold font-athletic uppercase text-xs inline-flex items-center gap-1 mt-3"
+              >
+                View Full Weekly Report <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
             </CardContent>
           </Card>
         </div>
-      </main>
-
-      <Footer />
-    </div>
+      </div>
+    </AppShell>
   );
 }

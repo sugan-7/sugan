@@ -1,11 +1,18 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 
-export function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+export interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+export function Skeleton({ className, ...props }: SkeletonProps) {
   return (
     <div
-      className={cn("animate-pulse rounded-md bg-secondary/70", className)}
+      className={cn(
+        "rounded-xl bg-court-card/80 border border-court-border/40 relative overflow-hidden animate-pulse",
+        className
+      )}
       {...props}
-    />
+    >
+      <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
+    </div>
   );
 }

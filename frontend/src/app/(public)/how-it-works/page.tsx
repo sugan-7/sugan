@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import { Navbar } from "@/components/common/Navbar";
@@ -5,59 +7,92 @@ import { Footer } from "@/components/common/Footer";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { Activity, Dumbbell, ShieldCheck, Target, Sparkles, Layers } from "lucide-react";
 
 export default function HowItWorksPage() {
+  const steps = [
+    {
+      num: "01",
+      title: "Athlete & Safety Onboarding",
+      desc: "Provide body dimensions, basketball schedule, training history, equipment availability, and complete our musculoskeletal safety screen to filter contraindications.",
+      icon: ShieldCheck,
+      color: "text-court-cyan",
+    },
+    {
+      num: "02",
+      title: "Jump Lab Manual Assessment",
+      desc: "Record standing reach, max standing touch, approach touch, and takeoff style. We compute your Standing Vertical and Approach Advantage transparently with zero fabricated PRs.",
+      icon: Activity,
+      color: "text-court-gold",
+    },
+    {
+      num: "03",
+      title: "Deterministic 8-Week Periodization",
+      desc: "Our Java rule engine structures an 8-week program tailored to your phase: Foundation, Strength + Elasticity, Power Development, or Max Jump Expression.",
+      icon: Layers,
+      color: "text-court-orange",
+    },
+    {
+      num: "04",
+      title: "Court-Side Daily Workout Execution",
+      desc: "Execute workouts on your mobile device in the gym, log set completions, track rest intervals with vibration alerts, and capture post-session RPE and joint soreness.",
+      icon: Dumbbell,
+      color: "text-emerald-400",
+    },
+    {
+      num: "05",
+      title: "Constrained AI Coach Synthesis",
+      desc: "Review weekly progress trends and explainable biomechanical rationales without unconstrained chatbots mutating core safety prescriptions.",
+      icon: Sparkles,
+      color: "text-purple-400",
+    },
+  ];
+
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-court-dark text-foreground">
       <Navbar />
 
       <main className="flex-1 container mx-auto px-4 sm:px-6 py-16 max-w-4xl">
-        <Badge variant="gold" className="mb-4">Complete Athlete Journey</Badge>
-        <h1 className="text-3xl sm:text-5xl font-black tracking-tight uppercase mb-6">
-          How VERTEX Works
-        </h1>
-        <p className="text-muted-foreground leading-relaxed mb-12 text-base">
-          From manual jump measurements to daily court-ready workouts, explore the end-to-end athlete workflow.
-        </p>
-
-        <div className="relative border-l-2 border-border pl-6 ml-4 space-y-12">
-          <div className="relative">
-            <div className="absolute -left-[33px] top-1 h-5 w-5 rounded-full bg-court-gold border-4 border-background" />
-            <h3 className="text-xl font-bold text-foreground">Step 1: Athlete & Safety Onboarding</h3>
-            <p className="text-sm text-muted-foreground mt-2">
-              Provide body metrics, basketball schedule, training history, equipment availability, and complete our safety screen to identify movement restrictions.
-            </p>
-          </div>
-
-          <div className="relative">
-            <div className="absolute -left-[33px] top-1 h-5 w-5 rounded-full bg-court-gold border-4 border-background" />
-            <h3 className="text-xl font-bold text-foreground">Step 2: Jump Lab Manual Assessment</h3>
-            <p className="text-sm text-muted-foreground mt-2">
-              Record your standing reach, max standing touch, approach touch, and 1-foot / 2-foot jump styles. We compute your Standing Vertical and Approach Advantage transparently.
-            </p>
-          </div>
-
-          <div className="relative">
-            <div className="absolute -left-[33px] top-1 h-5 w-5 rounded-full bg-court-gold border-4 border-background" />
-            <h3 className="text-xl font-bold text-foreground">Step 3: Deterministic Program Generation</h3>
-            <p className="text-sm text-muted-foreground mt-2">
-              Our rule engine structures an 8-week program tailored to your phase: Foundation, Strength + Elasticity, Power Development, or Jump Expression.
-            </p>
-          </div>
-
-          <div className="relative">
-            <div className="absolute -left-[33px] top-1 h-5 w-5 rounded-full bg-court-gold border-4 border-background" />
-            <h3 className="text-xl font-bold text-foreground">Step 4: Daily Training & Recovery Tracking</h3>
-            <p className="text-sm text-muted-foreground mt-2">
-              Execute workouts on your mobile device, log set completions, track rest intervals, and rate your session RPE and daily recovery readiness.
-            </p>
-          </div>
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <Badge variant="orange" className="mb-4">End-to-End Workflow</Badge>
+          <h1 className="text-4xl sm:text-6xl font-black font-athletic tracking-tight uppercase mb-4">
+            How VERTEX Works
+          </h1>
+          <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">
+            From baseline manual jump measurements to daily court-side workout execution.
+          </p>
         </div>
 
-        <div className="mt-16 text-center">
+        <div className="space-y-6 mb-16">
+          {steps.map((step) => {
+            const Icon = step.icon;
+            return (
+              <Card key={step.num} variant="glass" className="p-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                  <span className="font-mono text-3xl font-black text-court-orange shrink-0">
+                    {step.num}
+                  </span>
+                  <div className="w-10 h-10 rounded-xl bg-court-card border border-court-border flex items-center justify-center shrink-0">
+                    <Icon className={`w-5 h-5 ${step.color}`} />
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <h3 className="font-athletic text-2xl font-black text-white uppercase tracking-tight">
+                      {step.title}
+                    </h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {step.desc}
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+
+        <div className="text-center">
           <Link href="/register">
-            <Button variant="primary" size="lg">
-              Begin Assessment
+            <Button variant="primary" size="lg" className="shadow-glow-orange font-black">
+              START YOUR ASSESSMENT
             </Button>
           </Link>
         </div>

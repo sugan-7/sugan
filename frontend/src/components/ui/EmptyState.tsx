@@ -1,46 +1,53 @@
+"use client";
+
 import React from "react";
+import { FolderX, PlusCircle, Sparkles } from "lucide-react";
 import { Button } from "./Button";
 import { cn } from "@/lib/utils";
 
 export interface EmptyStateProps {
+  icon?: React.ReactNode;
   title?: string;
-  description: string;
+  description?: string;
   actionLabel?: string;
   onAction?: () => void;
-  icon?: React.ReactNode;
   className?: string;
 }
 
 export function EmptyState({
+  icon,
   title = "Insufficient data",
-  description,
+  description = "No logs or records have been established for this metric yet.",
   actionLabel,
   onAction,
-  icon,
   className,
 }: EmptyStateProps) {
   return (
     <div
       className={cn(
-        "rounded-xl border border-dashed border-border/80 p-8 text-center flex flex-col items-center justify-center space-y-3 bg-secondary/20",
+        "rounded-2xl border border-dashed border-court-border/80 p-8 sm:p-12 text-center flex flex-col items-center justify-center space-y-3 bg-court-charcoal/40 glass-panel",
         className
       )}
     >
-      {icon ? (
-        <div className="w-12 h-12 rounded-full bg-secondary/80 flex items-center justify-center text-muted-foreground mb-1">
-          {icon}
-        </div>
-      ) : (
-        <div className="w-10 h-10 rounded-full bg-secondary/80 flex items-center justify-center text-court-gold font-bold font-mono">
-          !
-        </div>
-      )}
-      <h4 className="text-base font-bold text-foreground">{title}</h4>
-      <p className="text-sm text-muted-foreground max-w-sm">{description}</p>
+      <div className="w-12 h-12 rounded-2xl bg-court-card border border-court-border flex items-center justify-center text-muted-foreground shadow-sm">
+        {icon || <FolderX className="w-6 h-6 text-court-orange/80" />}
+      </div>
+
+      <div className="max-w-md space-y-1">
+        <h4 className="text-base font-extrabold text-foreground font-athletic uppercase tracking-tight">
+          {title}
+        </h4>
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          {description}
+        </p>
+      </div>
+
       {actionLabel && onAction && (
-        <Button variant="outline" size="sm" onClick={onAction} className="mt-2">
-          {actionLabel}
-        </Button>
+        <div className="pt-2">
+          <Button variant="primary" size="sm" onClick={onAction} leftIcon={<PlusCircle className="w-3.5 h-3.5" />}>
+            {actionLabel}
+          </Button>
+        </div>
       )}
     </div>
   );

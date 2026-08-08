@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { cn } from "@/lib/utils";
 
@@ -6,16 +8,24 @@ export interface LoadingStateProps {
   className?: string;
 }
 
-export function LoadingState({ message = "Analyzing performance data...", className }: LoadingStateProps) {
+export function LoadingState({
+  message = "Calculating performance metrics...",
+  className,
+}: LoadingStateProps) {
   return (
-    <div className={cn("flex flex-col items-center justify-center p-12 text-center space-y-4", className)}>
-      <div className="relative w-12 h-12">
-        <div className="w-12 h-12 rounded-full border-2 border-court-gold/20 border-t-court-gold animate-spin" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-2 h-2 rounded-full bg-court-gold animate-ping" />
-        </div>
+    <div
+      className={cn(
+        "rounded-2xl border border-court-border/60 p-12 text-center flex flex-col items-center justify-center space-y-4 bg-court-charcoal/40 glass-panel",
+        className
+      )}
+    >
+      <div className="relative w-12 h-12 flex items-center justify-center">
+        <div className="absolute inset-0 rounded-full border-2 border-court-border border-t-court-orange animate-spin" />
+        <div className="w-5 h-5 rounded-full bg-court-orange/20 animate-pulse-glow" />
       </div>
-      <p className="text-sm font-medium text-muted-foreground animate-pulse">{message}</p>
+      <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground font-athletic">
+        {message}
+      </p>
     </div>
   );
 }

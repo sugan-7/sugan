@@ -4,35 +4,44 @@
 
 @layer base {
   :root {
-    --background: 222 47% 6%;
+    --background: 224 45% 4.5%;
     --foreground: 210 40% 98%;
 
-    --card: 222 40% 9%;
+    --card: 224 40% 8.5%;
     --card-foreground: 210 40% 98%;
+    --card-elevated: 224 35% 12%;
 
-    --popover: 222 40% 9%;
+    --popover: 224 40% 8.5%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 38 92% 50%;
-    --primary-foreground: 222 47% 6%;
+    --primary: 24 100% 50%;
+    --primary-foreground: 210 40% 98%;
+    --primary-glow: 24 100% 50% / 0.35;
 
-    --secondary: 217 33% 17%;
+    --secondary: 222 30% 15%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 217 33% 15%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 222 25% 14%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 24 95% 53%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 38 92% 50%;
+    --accent-foreground: 224 45% 4.5%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217 33% 18%;
-    --input: 217 33% 18%;
-    --ring: 38 92% 50%;
+    --border: 223 25% 18%;
+    --input: 223 25% 18%;
+    --ring: 24 100% 50%;
 
-    --radius: 0.75rem;
+    --radius: 0.875rem;
+
+    /* Chart Palette */
+    --chart-1: 24 100% 50%;
+    --chart-2: 38 92% 50%;
+    --chart-3: 199 89% 48%;
+    --chart-4: 152 76% 40%;
+    --chart-5: 280 84% 60%;
   }
 }
 
@@ -40,23 +49,135 @@
   * {
     @apply border-border;
   }
+  html {
+    color-scheme: dark;
+  }
   body {
-    @apply bg-background text-foreground antialiased selection:bg-court-gold selection:text-court-dark;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    @apply bg-background text-foreground antialiased selection:bg-court-orange selection:text-white font-sans;
+    font-feature-settings: "rlig" 1, "calt" 1, "cv11" 1;
+    overflow-x: hidden;
   }
 }
 
-/* Custom sports-performance glow utilities */
-.glow-gold {
-  box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.25);
+/* Athletic Condensed Headings & Metrics Typography */
+.font-athletic {
+  font-family: var(--font-heading), "Barlow Condensed", sans-serif;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  font-weight: 800;
 }
 
-.glow-orange {
-  box-shadow: 0 0 25px -5px rgba(255, 107, 0, 0.25);
+.font-metric {
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
 }
 
+/* Premium Sports Performance Visual Utilities */
 .glass-panel {
-  background: rgba(18, 24, 36, 0.75);
-  backdrop-filter: blur(16px);
+  background: rgba(15, 21, 33, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-elevated {
+  background: rgba(22, 31, 48, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.6);
+}
+
+.glass-card-interactive {
+  background: rgba(18, 25, 40, 0.75);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card-interactive:hover {
+  background: rgba(24, 34, 54, 0.9);
+  border-color: rgba(255, 107, 0, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px -8px rgba(255, 107, 0, 0.18);
+}
+
+/* Court Performance Glows */
+.glow-orange {
+  box-shadow: 0 0 35px -5px rgba(255, 107, 0, 0.35);
+}
+
+.glow-gold {
+  box-shadow: 0 0 35px -5px rgba(245, 158, 11, 0.3);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 30px -5px rgba(56, 189, 248, 0.3);
+}
+
+.glow-emerald {
+  box-shadow: 0 0 30px -5px rgba(16, 185, 129, 0.3);
+}
+
+/* Gradient Text Utilities */
+.text-gradient-fire {
+  background: linear-gradient(135deg, #FF8533 0%, #FF6B00 50%, #F59E0B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-cyan {
+  background: linear-gradient(135deg, #7DD3FC 0%, #38BDF8 60%, #0284C7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 50%, #D97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Basketball Court Floor Grid Background */
+.bg-court-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+.bg-radial-gradient {
+  background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(255, 107, 0, 0.18), transparent 70%);
+}
+
+/* Custom Scrollbar for Workout & Dashboard */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #080A0F;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #232F46;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FF6B00;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
