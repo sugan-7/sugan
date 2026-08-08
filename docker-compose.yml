@@ -1,0 +1,72 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: vertex-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: vertex_db
+      POSTGRES_USER: vertex_user
+      POSTGRES_PASSWORD: vertex_secret_password
+    ports:
+      - "5434:5432"
+    volumes:
+      - vertex_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vertex_user -d vertex_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: vertex-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - vertex_redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: vertex-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DATABASE_URL: jdbc:postgresql://postgres:5432/vertex_db
+      DATABASE_USERNAME: vertex_user
+      DATABASE_PASSWORD: vertex_secret_password
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: super_secure_256_bit_vertex_jwt_secret_key_minimum_32_chars!
+      JWT_REFRESH_SECRET: super_secure_refresh_vertex_jwt_secret_key_minimum_32_chars!
+      CORS_ALLOWED_ORIGINS: http://localhost:3000,http://frontend:3000
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: vertex-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8080/api/v1
+    ports:
+      - "3000:3000"
+
+volumes:
+  vertex_pgdata:
+  vertex_redisdata:

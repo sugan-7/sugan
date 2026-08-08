@@ -1,0 +1,14 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/vertex_db}
+    username: ${DATABASE_USERNAME:vertex_user}
+    password: ${DATABASE_PASSWORD:vertex_secret_password}
+    driver-class-name: org.postgresql.Driver
+  data:
+    redis:
+      url: ${REDIS_URL:redis://localhost:6379}
+  jpa:
+    show-sql: true
