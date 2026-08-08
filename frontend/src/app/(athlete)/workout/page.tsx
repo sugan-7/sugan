@@ -301,7 +301,7 @@ export default function WorkoutPage() {
 
                     {/* Coaching Cue Snippet */}
                     <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
-                      <p className="italic text-[11px] truncate max-w-sm">"{ex.cue}"</p>
+                      <p className="italic text-[11px] truncate max-w-sm">&ldquo;{ex.cue}&rdquo;</p>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -310,7 +310,7 @@ export default function WorkoutPage() {
                         }}
                         className="text-court-orange hover:underline font-bold font-athletic uppercase text-[11px] shrink-0"
                       >
-                        View Cues & Form →
+                        View Cues &amp; Form →
                       </button>
                     </div>
                   </div>

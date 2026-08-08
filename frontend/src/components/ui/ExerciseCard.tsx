@@ -114,7 +114,7 @@ export function ExerciseCard({
 
       {coachingCue && (
         <div className="text-xs text-muted-foreground italic bg-court-card/30 p-2 rounded-lg border-l-2 border-court-orange mb-2">
-          "{coachingCue}"
+          &ldquo;{coachingCue}&rdquo;
         </div>
       )}
 

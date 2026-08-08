@@ -70,7 +70,7 @@ export default function ProgramSchedulePage() {
 
           <Link href="/workout">
             <Button variant="primary" size="sm" className="shadow-glow-orange" leftIcon={<Play className="w-3.5 h-3.5 fill-white" />}>
-              Open Today's Workout
+              Open Today&apos;s Workout
             </Button>
           </Link>
         </div>

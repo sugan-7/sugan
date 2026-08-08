@@ -87,7 +87,7 @@ export default function AthleteDashboardPage() {
             </Link>
             <Link href="/workout">
               <Button variant="primary" size="sm" className="shadow-glow-orange" leftIcon={<Dumbbell className="w-3.5 h-3.5" />}>
-                Start Today's Workout
+                Start Today&apos;s Workout
               </Button>
             </Link>
           </div>
@@ -201,7 +201,7 @@ export default function AthleteDashboardPage() {
             </CardHeader>
             <CardContent>
               <p className="text-xs text-muted-foreground leading-relaxed mb-4">
-                "Your tendon elasticity adaptation is progressing smoothly (+3.5 cm from baseline). Today's workout focuses on Achilles stiffness. Keep ground contact time short on all pogo hops."
+                &ldquo;Your tendon elasticity adaptation is progressing smoothly (+3.5 cm from baseline). Today&apos;s workout focuses on Achilles stiffness. Keep ground contact time short on all pogo hops.&rdquo;
               </p>
               <Link
                 href="/ai-coach"

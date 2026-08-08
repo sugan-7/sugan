@@ -189,7 +189,7 @@ export default function LandingPage() {
                   <span className="text-rose-400 font-mono text-2xl font-black mb-2">03</span>
                   <CardTitle>Fabricated Outcomes</CardTitle>
                   <CardDescription>
-                    Unscientific promises claiming "Gain 10 inches in 4 weeks" disregard individual tendon stiffness, takeoff biomechanics, and biological adaptation rates.
+                    Unscientific promises claiming &ldquo;Gain 10 inches in 4 weeks&rdquo; disregard individual tendon stiffness, takeoff biomechanics, and biological adaptation rates.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -247,7 +247,7 @@ export default function LandingPage() {
                   Multi-Vector Athlete Assessment
                 </h2>
                 <p className="text-sm text-muted-foreground leading-relaxed mb-6">
-                  We don't guess your training needs. Our 8-step onboarding captures your physical dimensions, standing reach, basketball competitive schedule, resistance experience, and movement contraindications.
+                  We don&apos;t guess your training needs. Our 8-step onboarding captures your physical dimensions, standing reach, basketball competitive schedule, resistance experience, and movement contraindications.
                 </p>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3 p-3 rounded-xl bg-court-card border border-court-border">
@@ -396,7 +396,7 @@ export default function LandingPage() {
                     <Badge variant="orange" size="sm">4 reps</Badge>
                   </div>
                   <p className="text-xs text-muted-foreground italic">
-                    "Minimize ground contact time under 0.20s. Explode vertically immediately."
+                    &ldquo;Minimize ground contact time under 0.20s. Explode vertically immediately.&rdquo;
                   </p>
                 </div>
 
@@ -550,7 +550,7 @@ export default function LandingPage() {
                     Weekly Synthesis Analysis:
                   </p>
                   <p>
-                    "Your approach advantage is currently 5.0 cm, indicating good kinetic conversion. However, your session RPE spiked to 8.5 after yesterday's scrimmage. Today's volume is kept at 3 sets of depth drops to protect your patellar tendon."
+                    &ldquo;Your approach advantage is currently 5.0 cm, indicating good kinetic conversion. However, your session RPE spiked to 8.5 after yesterday&apos;s scrimmage. Today&apos;s volume is kept at 3 sets of depth drops to protect your patellar tendon.&rdquo;
                   </p>
                 </div>
 

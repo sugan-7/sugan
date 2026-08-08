@@ -97,10 +97,10 @@ export default function WeeklyReportPage() {
           </CardHeader>
           <CardContent className="space-y-3 text-xs text-muted-foreground leading-relaxed">
             <p>
-              "Throughout Week 2, your standing reach was maintained at 242.0 cm while standing touch progressed to 314.0 cm (+3.5 cm total from baseline). The introduction of seated calf raises and isometric split squats significantly increased lower-extremity tendon stiffness without triggering patellar joint soreness."
+              &ldquo;Throughout Week 2, your standing reach was maintained at 242.0 cm while standing touch progressed to 314.0 cm (+3.5 cm total from baseline). The introduction of seated calf raises and isometric split squats significantly increased lower-extremity tendon stiffness without triggering patellar joint soreness.&rdquo;
             </p>
             <p>
-              "Next week begins Week 3: Transition to Strength & Kinetic Elasticity with accelerated trap bar deadlifts."
+              &ldquo;Next week begins Week 3: Transition to Strength &amp; Kinetic Elasticity with accelerated trap bar deadlifts.&rdquo;
             </p>
           </CardContent>
         </Card>
