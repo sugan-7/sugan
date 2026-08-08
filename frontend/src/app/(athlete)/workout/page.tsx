@@ -25,6 +25,7 @@ import { Timer } from "@/components/ui/Timer";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import { Drawer } from "@/components/ui/Drawer";
+import { ExerciseAnimatedVideo } from "@/components/ui/ExerciseAnimatedVideo";
 
 interface ExerciseItem {
   id: string;
@@ -379,8 +380,26 @@ export default function WorkoutPage() {
               })}
             </div>
 
-            {/* Rest Timer & Action Column */}
+            {/* Rest Timer & Live Video Column */}
             <div className="space-y-4">
+              {/* Biomechanical Animated Video Player */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] uppercase font-bold tracking-wider font-athletic text-court-orange">
+                    Biomechanical Video Loop
+                  </span>
+                  <span className="text-[10px] font-mono text-muted-foreground">
+                    HD Animated Vectors
+                  </span>
+                </div>
+                <ExerciseAnimatedVideo
+                  exerciseId={activeExercise.id}
+                  exerciseName={activeExercise.name}
+                  category={activeExercise.category}
+                  aspectRatio="video"
+                />
+              </div>
+
               <Timer
                 key={timerKey}
                 initialSeconds={90}
@@ -442,6 +461,14 @@ export default function WorkoutPage() {
           title={activeExercise.name}
         >
           <div className="space-y-4 text-xs text-muted-foreground">
+            {/* Full-width Animated Biomechanical Video */}
+            <ExerciseAnimatedVideo
+              exerciseId={activeExercise.id}
+              exerciseName={activeExercise.name}
+              category={activeExercise.category}
+              aspectRatio="video"
+            />
+
             <div className="p-4 rounded-xl bg-court-card border border-court-border space-y-1">
               <span className="text-[10px] uppercase font-bold text-court-orange font-athletic block">
                 Prescription
@@ -468,7 +495,7 @@ export default function WorkoutPage() {
             <Button
               variant="primary"
               size="md"
-              className="w-full mt-4"
+              className="w-full mt-4 shadow-glow-orange"
               onClick={() => setIsCueDrawerOpen(false)}
             >
               Resume Workout
